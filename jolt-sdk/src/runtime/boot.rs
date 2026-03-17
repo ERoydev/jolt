@@ -2,15 +2,6 @@
 //!
 //! Provides platform initialization for Jolt zkVM guests using ZeroOS.
 
-// Debug macros from zeroos-debug crate - re-exported via zeroos
-// These are no-ops when debug feature is disabled
-macro_rules! debug_writeln {
-    ($($arg:tt)*) => {
-        // Debug output disabled in jolt-sdk to avoid external dependency
-        // In production builds, this is a no-op
-    };
-}
-
 extern "C" {
     static __heap_start: u8;
     static __heap_end: u8;
@@ -30,20 +21,20 @@ fn install_trap_vector() {
 
 #[no_mangle]
 pub extern "C" fn __platform_bootstrap() {
-    debug_writeln!("[BOOT] __platform_bootstrap (jolt-platform)");
+    zeroos::debug::writeln!("[BOOT] __platform_bootstrap (jolt-platform)");
 
     zeroos::initialize();
 
     {
         let heap_start = core::ptr::addr_of!(__heap_start) as usize;
         let heap_end = core::ptr::addr_of!(__heap_end) as usize;
-        debug_writeln!("[BOOT] Heap start=0x{:x}, end=0x{:x}", heap_start, heap_end);
+        zeroos::debug::writeln!("[BOOT] Heap start=0x{:x}, end=0x{:x}", heap_start, heap_end);
         let heap_size = heap_end - heap_start;
         zeroos::foundation::kfn::memory::kinit(heap_start, heap_size);
 
         let _stack_top = core::ptr::addr_of!(__stack_top) as usize;
         let _stack_bottom = core::ptr::addr_of!(__stack_bottom) as usize;
-        debug_writeln!(
+        zeroos::debug::writeln!(
             "[BOOT] Stack top=0x{:x}, bottom=0x{:x}",
             _stack_top,
             _stack_bottom
@@ -54,7 +45,7 @@ pub extern "C" fn __platform_bootstrap() {
     {
         {
             install_trap_vector();
-            debug_writeln!("[BOOT] Trap handler installed");
+            zeroos::debug::writeln!("[BOOT] Trap handler installed");
         }
 
         #[cfg(feature = "zeroos-thread")]
@@ -78,7 +69,7 @@ pub extern "C" fn __platform_bootstrap() {
 
             #[cfg(feature = "zeroos-vfs-device-console")]
             {
-                debug_writeln!("[BOOT] Registering console file descriptors");
+                zeroos::debug::writeln!("[BOOT] Registering console file descriptors");
                 register_console_fd(1, &STDOUT_FOPS);
                 register_console_fd(2, &STDERR_FOPS);
             }
