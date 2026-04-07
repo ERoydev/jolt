@@ -1,0 +1,15 @@
+[package]
+name = "ckb-vm-example-u"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+jolt-sdk = { workspace = true, features = ["host"] }
+tracing-subscriber.workspace = true
+tracing.workspace = true
+guest = { package = "ckb-vm-guest", path = "./guest" }
+
+[dev-dependencies]
+ckb-vm = { version = "0.24.0", features = ["asm"] }
+ckb-vm-fuzzing-utils = "1.0.0"
+protobuf-ckb-syscalls = "1.0.0"

@@ -1,7 +1,7 @@
 //! Exit functionality for Jolt guests
 //!
 //! Provides clean program termination that the Jolt emulator can detect,
-//! and panic/abort handling for ZeroOS integration.
+//! and panic/abort handling.
 
 cfg_if::cfg_if! {
     if #[cfg(any(target_os = "linux", target_os = "none"))] {
@@ -24,8 +24,7 @@ cfg_if::cfg_if! {
 
         /// Platform-specific abort handler for signal-based panic detection.
         ///
-        /// Called by ZeroOS signal handler when a fatal signal is received (e.g., SIGABRT
-        /// from musl's abort()), or by zeroos-runtime-nostd's panic handler.
+        /// Called when a fatal signal is received (e.g., SIGABRT from musl's abort()).
         /// Sets the panic bit and terminates with Linux-standard exit code (128 + sig).
         ///
         /// # Arguments

@@ -1,0 +1,25 @@
+[package]
+name = "ckb-vm-guest"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+guest = []
+
+[dependencies]
+jolt = { package = "jolt-sdk", path = "../../../jolt-sdk" }
+
+serde = { version = "1.0", default-features = false, features = [
+    "derive",
+    "alloc",
+] }
+
+ckb-vm = { version = "0.24.0", default-features = false, features = ["asm"] }
+# Needs default-features or they gonna drag the whole std ecosystem
+ckb-vm-fuzzing-utils = { version = "=1.0.0", default-features = false }
+protobuf-ckb-syscalls = { version = "=1.0.0", default-features = false }
+
+# ckb
+# ckb-hash = { version = "1.0.1", default-features = false, features = [
+#     "ckb-contract",
+# ] }

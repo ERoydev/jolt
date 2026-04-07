@@ -87,8 +87,10 @@ members = [
     "examples/advice-demo/guest",
     "examples/sig-recovery/host",
     "examples/sig-recovery/guest",
+    "examples/sig-recovery/guest",
     "zklean-extractor",
     "z3-verifier",
+    "examples/ckb-vm-example-u",
 ]
 
 [features]
@@ -147,6 +149,14 @@ ark-ec = { git = "https://github.com/a16z/arkworks-algebra", branch = "dev/twist
 ark-serialize = { git = "https://github.com/a16z/arkworks-algebra", branch = "dev/twist-shout" }
 allocative = { git = "https://github.com/facebookexperimental/allocative", rev = "85b773d85d526d068ce94724ff7a7b81203fc95e" }
 
+#### PATCHES RELATED TO CKB-VM ####
+ckb-vm = { git = "https://github.com/ERoydev/ckb-vm", branch = "feat/asm-no-std" } # not needed — pulled transitively by the patches below
+
+# Using the basic `protobuf-ckb-syscalls-fork`, but Fixated on ckb-vm 0.24.0
+protobuf-ckb-syscalls = { git = "https://github.com/LimeChain/ckb-vm-contrib", branch = "v0.24-vm-no-std" }
+ckb-vm-fuzzing-utils = { git = "https://github.com/LimeChain/ckb-vm-contrib", branch = "v0.24-vm-no-std" }
+#### PATCHES RELATED TO CKB-VM ####
+
 [workspace.metadata.cargo-machete]
 ignored = ["jolt-sdk"]
 
@@ -167,7 +177,17 @@ sha3 = "0.10.8"
 blake2 = "0.10"
 blake3 = { version = "1.5.0" }
 jolt-optimizations = { git = "https://github.com/a16z/arkworks-algebra", branch = "dev/twist-shout" }
-dory = { package = "dory-pcs", version = "0.3.0", features = ["backends", "cache", "disk-persistence"] }
+dory = { package = "dory-pcs", version = "0.3.0", features = [
+    "backends",
+    "cache",
+    "disk-persistence",
+] }
+
+# dory = { package = "dory-pcs", git = "https://github.com/ERoydev/dory", branch = "perf/parallel-cache-init", features = [
+#     "backends",
+#     "cache",
+#     "disk-persistence",
+# ] }
 
 # Core Utilities
 clap = { version = "4.5.4", features = ["derive"] }
@@ -195,7 +215,9 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.108", default-features = false }
 rmp-serde = "1.3.0"
 bincode = { version = "2", features = ["serde"] }
-postcard = { version = "1.0.8", default-features = false, features = ["embedded-io-06"] }
+postcard = { version = "1.0.8", default-features = false, features = [
+    "embedded-io-06",
+] }
 toml_edit = "0.25"
 bytemuck = "1.23.2"
 bytemuck_derive = "1.10.1"
@@ -263,8 +285,13 @@ riscv = { version = "0.16", default-features = false }
 alloy-primitives = "1"
 alloy-consensus = "1"
 alloy-eips = "1"
-reth-primitives-traits = { git = "https://github.com/paradigmxyz/reth", features = ["rayon", "serde"] }
-reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", features = ["serde"] }
+reth-primitives-traits = { git = "https://github.com/paradigmxyz/reth", features = [
+    "rayon",
+    "serde",
+] }
+reth-ethereum-primitives = { git = "https://github.com/paradigmxyz/reth", features = [
+    "serde",
+] }
 secp256k1 = { version = "0.30", features = ["recovery", "rand"] }
 
 # Internal dependencies
